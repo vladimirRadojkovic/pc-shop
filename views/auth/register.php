@@ -1,4 +1,5 @@
 <?php include 'views/layout/header.php'; ?>
+<?php include 'views/layout/alert.php'; ?>
 
 <h2>Registracija korisnika</h2>
 
