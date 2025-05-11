@@ -1,6 +1,5 @@
 <?php
 require_once 'config/config.php';
-session_start();
 
 function registerUser() {
     global $pdo;
@@ -10,22 +9,30 @@ function registerUser() {
     $confirm = $_POST['confirm_password'];
 
     if ($password !== $confirm) {
-        echo "Lozinke se ne poklapaju.";
+        $_SESSION['alert'] = [
+            'type' => 'danger',
+            'message' => 'Lozinke se ne poklapaju.'
+        ];
         return;
     }
 
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->execute([$username]);
     if ($stmt->fetch()) {
-        echo "Korisničko ime je zauzeto.";
+        $_SESSION['alert'] = [
+            'type' => 'danger',
+            'message' => 'Korisničko ime je zauzeto.'
+        ];
         return;
     }
 
     $hashed = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, 'user')");
     $stmt->execute([$username, $hashed]);
-
-    echo "Registracija uspešna. Možete se prijaviti.";
+    $_SESSION['alert'] = [
+        'type' => 'success',
+        'message' => 'Registracija uspešna. Možete se prijaviti.'
+    ];
 }
 
 function loginUser() {
@@ -44,9 +51,18 @@ function loginUser() {
             'username' => $user['username'],
             'role' => $user['role']
         ];
-        header("Location: index.php");
-        exit;
+
+        if ($user['role'] === 'admin') {
+            header('Location: /pc-shop/views/admin/dashboard.php');
+            exit;
+        } else {
+            header('Location: /pc-shop/index.php');
+            exit;
+        }
     } else {
-        echo "Pogrešno korisničko ime ili lozinka.";
+        $_SESSION['alert'] = [
+            'type' => 'danger',
+            'message' => 'Pogrešan username ili lozinka.'
+        ];
     }
 }
