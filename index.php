@@ -4,11 +4,15 @@ session_start();
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 switch ($page) {
-    case 'login':
-        include 'views/auth/login.php';
-        break;
     case 'register':
+        include 'controllers/AuthController.php';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') registerUser();
         include 'views/auth/register.php';
+        break;
+    case 'login':
+        include 'controllers/AuthController.php';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') loginUser();
+        include 'views/auth/login.php';
         break;
     case 'admin_products':
         include 'views/admin/product_list.php';
@@ -26,9 +30,10 @@ switch ($page) {
         include 'views/user/checkout.php';
         break;
     case 'logout':
-        include 'controllers/AuthController.php';
-        // logout();  
-        break;
+        session_destroy();
+        header("Location: index.php");
+        exit;
     default:
-        include 'views/user/product_catalog.php';
+        include 'views/home.php';
+        break;
 }
