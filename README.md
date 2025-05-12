@@ -45,6 +45,6 @@ Ovo je školski PHP projekat – troslojna web aplikacija koja simulira rad prod
 
 3. Pokreni MySQL i Apache iz XAMPP kontrole.
 
-4. Kreiraj bazu pomoću db.sql fajla (ako postoji) ili izvrši ručno SQL skripte.
+4. Otvori sledeći URL u browseru kako bi se inicijalizovala baza: http://localhost/pc-shop/setup.php
 
-5. Otvori u browseru (http://localhost/pc-shop/)
+5. Otvori u browseru http://localhost/pc-shop/
