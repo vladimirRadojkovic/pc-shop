@@ -47,5 +47,4 @@ Ovo je školski PHP projekat – troslojna web aplikacija koja simulira rad prod
 
 4. Kreiraj bazu pomoću db.sql fajla (ako postoji) ili izvrši ručno SQL skripte.
 
-5. Otvori u browseru
-[text](http://localhost/pc-shop/)
+5. Otvori u browseru (http://localhost/pc-shop/)
