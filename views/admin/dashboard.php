@@ -3,15 +3,34 @@ require_once '../../config/config.php';
 require_once '../layout/header.php';
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: /pc-shop/index.php");
     exit;
 }
 ?>
-<h2>Admin Panel</h2>
-<hr>
-<div class="list-group">
-    <a href="index.php?page=add_product" class="list-group-item list-group-item-action">Dodaj novi proizvod</a>
-    <a href="index.php?page=edit_product" class="list-group-item list-group-item-action">Izmeni postojeći proizvod</a>
-    <a href="index.php?page=delete_product" class="list-group-item list-group-item-action">Obriši proizvod</a>
-    <a href="index.php?page=orders" class="list-group-item list-group-item-action">Pregled porudžbina</a>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Panel</h2>
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="list-group">
+                <a href="index.php?page=add_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                    <span>Dodaj novi proizvod</span>
+                    <i class="bi bi-plus-circle"></i>
+                </a>
+                <a href="index.php?page=edit_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                    <span>Izmeni postojeći proizvod</span>
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+                <a href="index.php?page=delete_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                    <span>Obriši proizvod</span>
+                    <i class="bi bi-trash"></i>
+                </a>
+                <a href="index.php?page=orders" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                    <span>Pregled porudžbina</span>
+                    <i class="bi bi-box"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
