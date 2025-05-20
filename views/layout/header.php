@@ -23,7 +23,7 @@
                         <a class="nav-link" href="#">Zdravo, <?= htmlspecialchars($_SESSION['user']['username']) ?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pc-shop/index.php?page=logout">Odjava</a>
+                        <a class="nav-link" href="/pc-shop/index.php?page=logout">Odjave</a>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">

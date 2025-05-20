@@ -56,7 +56,7 @@ function loginUser() {
             header('Location: /pc-shop/views/admin/dashboard.php');
             exit;
         } else {
-            header('Location: /pc-shop/index.php');
+            header('Location: /pc-shop/views/user/products.php');
             exit;
         }
     } else {

@@ -35,6 +35,9 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+
+INSERT INTO users (username, password, role)
+    VALUES ('admin', '$2y$10$999999999999999999999u52G2458448f764a8523b092306236230', 'admin');
 ";
 
 try {

@@ -23,6 +23,16 @@ switch ($page) {
     case 'admin':
         include 'views/admin/dashboard.php';
         break;
+    case 'add_product':
+        require_once 'controllers/ProductController.php';
+        $controller = new ProductController();
+        $controller->showAddForm();
+        break;
+    case 'process_product':
+        require_once 'controllers/ProductController.php';
+        $controller = new ProductController();
+        $controller->processAddForm();
+        break;
     default:
         include 'views/home.php';
         break;

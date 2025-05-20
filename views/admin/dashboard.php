@@ -14,7 +14,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="list-group">
-                <a href="index.php?page=add_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                <a href="/pc-shop/index.php?page=add_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
                     <span>Dodaj novi proizvod</span>
                     <i class="bi bi-plus-circle"></i>
                 </a>
