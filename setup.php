@@ -35,14 +35,23 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
-
-INSERT INTO users (username, password, role)
-    VALUES ('admin', '$2y$10$999999999999999999999u52G2458448f764a8523b092306236230', 'admin');
 ";
 
 try {
     $pdo->exec($sql);
-    echo "Baza i tabele uspešno kreirane.";
+    
+    // Check if admin user exists
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = 'admin'");
+    $stmt->execute();
+    $adminExists = $stmt->fetch();
+    
+    // If admin doesn't exist, create it with hashed password
+    if (!$adminExists) {
+        $adminPassword = password_hash('admin', PASSWORD_DEFAULT);
+        $insertAdmin = $pdo->prepare("INSERT INTO users (username, password, role) VALUES ('admin', ?, 'admin')");
+        $insertAdmin->execute([$adminPassword]);
+        echo "Admin user created successfully.";
+    }
 } catch (PDOException $e) {
     echo "Greška: " . $e->getMessage();
 }

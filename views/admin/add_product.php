@@ -1,11 +1,15 @@
 <?php
-// require_once '../../config/config.php';
-require_once '../layout/header.php';
+require_once 'config/config.php';
+require_once 'views/layout/header.php';
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
-    header("Location: /pc-shop/index.php");
+    header("Location: index.php");
     exit;
 }
+
+// Initialize variables
+$success = false;
+$error = false;
 ?>
 
 <div class="container mt-5">
@@ -47,4 +51,4 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     </form>
 </div>
 
-<?php require_once '../layout/footer.php'; ?>
+<?php require_once 'views/layout/footer.php'; ?>

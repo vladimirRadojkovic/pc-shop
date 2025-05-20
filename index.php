@@ -3,6 +3,9 @@
         session_start();
     }
 
+// Include setup to ensure database tables and admin user
+require_once 'setup.php';
+
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 switch ($page) {
@@ -22,6 +25,9 @@ switch ($page) {
         exit;
     case 'admin':
         include 'views/admin/dashboard.php';
+        break;
+    case 'products':
+        include 'views/user/products.php';
         break;
     case 'add_product':
         require_once 'controllers/ProductController.php';

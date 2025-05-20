@@ -53,10 +53,10 @@ function loginUser() {
         ];
 
         if ($user['role'] === 'admin') {
-            header('Location: /pc-shop/views/admin/dashboard.php');
+            header('Location: index.php?page=admin');
             exit;
         } else {
-            header('Location: /pc-shop/views/user/products.php');
+            header('Location: index.php?page=products');
             exit;
         }
     } else {
