@@ -1,4 +1,6 @@
 <?php
+// Initialize the application
+require_once 'setup.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
@@ -15,6 +17,12 @@ switch ($page) {
         break;
     case 'admin':
         include 'views/admin/dashboard.php';
+        break;
+    case 'admin_orders':
+        include 'views/admin/admin_orders.php';
+        break;
+    case 'admin_order_details':
+        include 'views/admin/admin_order_details.php';
         break;
     case 'all_products':
         require_once 'controllers/ProductController.php';

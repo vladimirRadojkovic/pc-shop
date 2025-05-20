@@ -22,7 +22,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
                     <span>Upravljanje proizvodima</span>
                     <i class="bi bi-grid"></i>
                 </a>
-                <a href="index.php?page=orders" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                <a href="index.php?page=admin_orders" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
                     <span>Pregled porudžbina</span>
                     <i class="bi bi-box"></i>
                 </a>
