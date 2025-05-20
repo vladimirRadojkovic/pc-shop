@@ -2,7 +2,6 @@
 <?php include 'views/layout/alert.php'; ?>
 
 <h2>Registracija korisnika</h2>
-
 <form action="index.php?page=register" method="POST" class="mt-4" style="max-width: 400px;">
     <div class="mb-3">
         <label class="form-label">Korisničko ime</label>
@@ -21,5 +20,4 @@
 
     <button type="submit" name="register" class="btn btn-primary">Registruj se</button>
 </form>
-
 <?php include 'views/layout/footer.php'; ?>

@@ -56,7 +56,7 @@ function loginUser() {
             header('Location: index.php?page=admin');
             exit;
         } else {
-            header('Location: index.php?page=products');
+            header('Location: index.php?page=all_products');
             exit;
         }
     } else {

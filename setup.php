@@ -1,7 +1,6 @@
 <?php
 require_once 'config/config.php';
 
-// Detect if running standalone or included
 $is_standalone = (basename($_SERVER['SCRIPT_FILENAME']) === 'setup.php');
 
 $sql = "

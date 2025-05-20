@@ -1,5 +1,4 @@
 <?php
-require_once 'config/config.php';
 require_once 'views/layout/header.php';
 require_once 'views/layout/alert.php';
 
@@ -19,13 +18,9 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
                     <span>Dodaj novi proizvod</span>
                     <i class="bi bi-plus-circle"></i>
                 </a>
-                <a href="index.php?page=edit_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
-                    <span>Izmeni postojeći proizvod</span>
-                    <i class="bi bi-pencil-square"></i>
-                </a>
-                <a href="index.php?page=delete_product" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
-                    <span>Obriši proizvod</span>
-                    <i class="bi bi-trash"></i>
+                <a href="index.php?page=list_products" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                    <span>Upravljanje proizvodima</span>
+                    <i class="bi bi-grid"></i>
                 </a>
                 <a href="index.php?page=orders" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
                     <span>Pregled porudžbina</span>
