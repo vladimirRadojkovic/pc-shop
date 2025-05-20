@@ -1,10 +1,6 @@
 <?php
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-
-// Include setup to ensure database tables and admin user
-require_once 'setup.php';
+// Initialize the application
+require_once 'init.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
@@ -21,8 +17,8 @@ switch ($page) {
         break;
     case 'logout':
         session_destroy();
-        include 'views/auth/login.php';
-        exit;
+        redirect('login');
+        break;
     case 'admin':
         include 'views/admin/dashboard.php';
         break;

@@ -1,31 +1,16 @@
 <?php
 require_once 'config/config.php';
 require_once 'views/layout/header.php';
-
-// Session should already be started in header.php, but check just in case
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+require_once 'views/layout/alert.php';
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
-
-// Check for status message (for add product confirmation)
-$status_message = '';
-if (isset($_GET['status']) && $_GET['status'] === 'product_added') {
-    $status_message = 'Proizvod je uspešno dodat!';
-}
 ?>
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">Admin Panel</h2>
-    
-    <?php if (!empty($status_message)): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($status_message) ?></div>
-    <?php endif; ?>
-    
     <hr>
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -50,5 +35,4 @@ if (isset($_GET['status']) && $_GET['status'] === 'product_added') {
         </div>
     </div>
 </div>
-
 <?php require_once 'views/layout/footer.php'; ?>

@@ -1,6 +1,9 @@
 <?php
 require_once 'config/config.php';
 
+// Detect if running standalone or included
+$is_standalone = (basename($_SERVER['SCRIPT_FILENAME']) === 'setup.php');
+
 $sql = "
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,8 +53,27 @@ try {
         $adminPassword = password_hash('admin', PASSWORD_DEFAULT);
         $insertAdmin = $pdo->prepare("INSERT INTO users (username, password, role) VALUES ('admin', ?, 'admin')");
         $insertAdmin->execute([$adminPassword]);
-        echo "Admin user created successfully.";
+        $_SESSION['alert'] = [
+            'type' => 'success',
+            'message' => 'Admin user created successfully.'
+        ];
     }
+    
+    // Only redirect if this script is accessed directly
+    if ($is_standalone) {
+        header('Location: index.php?page=home');
+        exit();
+    }
+    
 } catch (PDOException $e) {
-    echo "Greška: " . $e->getMessage();
+    $_SESSION['alert'] = [
+        'type' => 'danger',
+        'message' => "Database error: " . $e->getMessage()
+    ];
+    
+    // Only redirect if this script is accessed directly
+    if ($is_standalone) {
+        header('Location: index.php?page=home');
+        exit();
+    }
 }

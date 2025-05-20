@@ -1,27 +1,17 @@
 <?php
 require_once 'config/config.php';
 require_once 'views/layout/header.php';
+require_once 'views/layout/alert.php';
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
-
-// Initialize variables
-$success = false;
-$error = false;
 ?>
 
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Dodaj novi proizvod</h2>
-
-    <?php if ($success): ?>
-        <div class="alert alert-success">Proizvod uspešno dodat!</div>
-    <?php elseif ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
-
-    <form method="POST" enctype="multipart/form-data" class="shadow p-4 bg-light rounded">
+    <form action="index.php?page=process_product" method="POST" enctype="multipart/form-data" class="shadow p-4 bg-light rounded">
         <div class="mb-3">
             <label for="name" class="form-label">Naziv proizvoda</label>
             <input type="text" class="form-control" name="name" required>
@@ -50,5 +40,4 @@ $error = false;
         <button type="submit" class="btn btn-primary">Dodaj proizvod</button>
     </form>
 </div>
-
 <?php require_once 'views/layout/footer.php'; ?>

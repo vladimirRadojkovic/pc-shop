@@ -1,3 +1,5 @@
+<?php include 'views/layout/header.php'; ?>
+<?php include 'views/layout/alert.php'; ?>
 <!DOCTYPE html>
 <html lang="sr">
 <head>
@@ -19,3 +21,4 @@
 
 </body>
 </html>
+<?php include 'views/layout/footer.php'; ?>
