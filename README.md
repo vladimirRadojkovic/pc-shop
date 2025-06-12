@@ -53,7 +53,6 @@ Ovo je školski PHP projekat – troslojna web aplikacija koja simulira rad prod
 ├── Dockerfile      # Konfiguracija Docker kontejnera
 ├── docker-compose.yaml # Docker Compose konfiguracija
 ├── index.php       # Glavna ruta
-├── init.php        # Inicijalizacija aplikacije
 └── setup.php       # Kreiranje baze i tabela
 ```
 
