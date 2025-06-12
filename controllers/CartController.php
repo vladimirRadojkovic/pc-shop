@@ -3,25 +3,15 @@ require_once 'config/config.php';
 
 class CartController {
     
-    /**
-     * Initialize cart in session if it doesn't exist
-     */
     private function initCart() {
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
     }
-    
-    /**
-     * Add product to cart
-     * 
-     * @param int $productId
-     * @param int $quantity
-     */
+
     public function addToCart() {
         global $pdo;
         
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
@@ -32,7 +22,6 @@ class CartController {
             
             if ($quantity < 1) $quantity = 1;
             
-            // Validate product exists
             try {
                 $stmt = $pdo->prepare("SELECT id, name, price FROM products WHERE id = ?");
                 $stmt->execute([$productId]);
@@ -46,10 +35,8 @@ class CartController {
                     redirect('all_products');
                 }
                 
-                // Initialize cart
                 $this->initCart();
                 
-                // Check if product already in cart
                 if (isset($_SESSION['cart'][$productId])) {
                     $_SESSION['cart'][$productId]['quantity'] += $quantity;
                 } else {
@@ -79,11 +66,7 @@ class CartController {
         }
     }
     
-    /**
-     * Display the cart contents
-     */
     public function viewCart() {
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
@@ -92,11 +75,7 @@ class CartController {
         require 'views/user/cart.php';
     }
     
-    /**
-     * Update quantity of a product in cart
-     */
     public function updateCartItem() {
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
@@ -106,7 +85,6 @@ class CartController {
             $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
             
             if ($quantity < 1) {
-                // Remove item if quantity is less than 1
                 $this->removeCartItem($productId);
                 return;
             }
@@ -128,13 +106,7 @@ class CartController {
         }
     }
     
-    /**
-     * Remove item from cart
-     * 
-     * @param int $productId
-     */
     public function removeCartItem($productId = null) {
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
@@ -157,11 +129,7 @@ class CartController {
         redirect('cart');
     }
     
-    /**
-     * Clear the entire cart
-     */
     public function clearCart() {
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
@@ -175,21 +143,16 @@ class CartController {
         
         redirect('cart');
     }
-    
-    /**
-     * Process checkout and create order
-     */
+
     public function checkout() {
         global $pdo;
         
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
         
         $this->initCart();
         
-        // Check if cart is empty
         if (empty($_SESSION['cart'])) {
             $_SESSION['alert'] = [
                 'type' => 'danger',
@@ -199,25 +162,20 @@ class CartController {
         }
         
         try {
-            // Start transaction
             $pdo->beginTransaction();
             
-            // Create order
             $stmt = $pdo->prepare("INSERT INTO orders (user_id, created_at) VALUES (?, NOW())");
             $stmt->execute([$_SESSION['user']['id']]);
             $orderId = $pdo->lastInsertId();
             
-            // Add order items
             $insertItem = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)");
             
             foreach ($_SESSION['cart'] as $item) {
                 $insertItem->execute([$orderId, $item['id'], $item['quantity']]);
             }
             
-            // Commit transaction
             $pdo->commit();
             
-            // Clear cart after successful checkout
             $_SESSION['cart'] = [];
             
             $_SESSION['alert'] = [
@@ -228,7 +186,6 @@ class CartController {
             redirect('order_history');
             
         } catch (PDOException $e) {
-            // Rollback transaction on error
             $pdo->rollBack();
             
             $_SESSION['alert'] = [
@@ -240,19 +197,14 @@ class CartController {
         }
     }
     
-    /**
-     * Display order history for the user
-     */
     public function orderHistory() {
         global $pdo;
         
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
         
         try {
-            // Fetch user's orders
             $stmt = $pdo->prepare("
                 SELECT o.id, o.created_at, 
                        SUM(oi.quantity * p.price) as total_amount,
@@ -279,15 +231,9 @@ class CartController {
         }
     }
     
-    /**
-     * Display order details
-     * 
-     * @param int $orderId
-     */
     public function orderDetails($orderId = null) {
         global $pdo;
         
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
@@ -297,7 +243,6 @@ class CartController {
         }
         
         try {
-            // Check if order belongs to user
             $stmt = $pdo->prepare("SELECT * FROM orders WHERE id = ? AND user_id = ?");
             $stmt->execute([$orderId, $_SESSION['user']['id']]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -310,7 +255,6 @@ class CartController {
                 redirect('order_history');
             }
             
-            // Fetch order items
             $stmt = $pdo->prepare("
                 SELECT oi.quantity, p.name, p.price, (oi.quantity * p.price) as subtotal
                 FROM order_items oi
@@ -320,7 +264,6 @@ class CartController {
             $stmt->execute([$orderId]);
             $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Calculate total
             $total = 0;
             foreach ($items as $item) {
                 $total += $item['subtotal'];

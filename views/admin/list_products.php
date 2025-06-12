@@ -42,7 +42,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
                             <td><?= $product['id'] ?></td>
                             <td>
                                 <?php if (!empty($product['image_path'])): ?>
-                                    <img src="<?= htmlspecialchars($product['image_path']) ?>" class="img-thumbnail" alt="<?= htmlspecialchars($product['name']) ?>" style="max-width: 50px;">
+                                    <img src="<?= htmlspecialchars('/assets/img/' . $product['image_path']) ?>" class="img-thumbnail" alt="<?= htmlspecialchars($product['name']) ?>" style="max-width: 50px;">
                                 <?php else: ?>
                                     <img src="assets/img/no-image.png" class="img-thumbnail" alt="Bez slike" style="max-width: 50px;">
                                 <?php endif; ?>

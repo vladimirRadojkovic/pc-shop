@@ -1,27 +1,15 @@
 <?php
-// Start the session if it hasn't been started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
 require_once 'config/config.php';
 
-// Define utility functions
-
-/**
- * Redirect to another page
- * @param string $page The page to redirect to (default: home)
- */
 function redirect($page = 'home') {
     header("Location: index.php?page=$page");
     exit();
 }
 
-/**
- * Set an alert message in the session
- * @param string $type The type of alert (success, danger, warning, info)
- * @param string $message The message to display
- */
 function setAlert($type, $message) {
     $_SESSION['alert'] = [
         'type' => $type,
@@ -70,12 +58,10 @@ CREATE TABLE IF NOT EXISTS order_items (
 try {
     $pdo->exec($sql);
     
-    // Check if admin user exists
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = 'admin'");
     $stmt->execute();
     $adminExists = $stmt->fetch();
     
-    // If admin doesn't exist, create it with hashed password
     if (!$adminExists) {
         $adminPassword = password_hash('admin', PASSWORD_DEFAULT);
         $insertAdmin = $pdo->prepare("INSERT INTO users (username, password, role) VALUES ('admin', ?, 'admin')");
@@ -86,7 +72,6 @@ try {
         ];
     }
     
-    // Only redirect if this script is accessed directly
     if ($is_standalone) {
         header('Location: index.php?page=home');
         exit();
@@ -98,7 +83,6 @@ try {
         'message' => "Database error: " . $e->getMessage()
     ];
     
-    // Only redirect if this script is accessed directly
     if ($is_standalone) {
         header('Location: index.php?page=home');
         exit();

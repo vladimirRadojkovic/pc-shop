@@ -1,23 +1,14 @@
 <?php
-// Start session if needed
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+require_once 'views/layout/header.php';
+require_once 'views/layout/alert.php';
 
-// Check authorization before including any view files
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
 
-// Now it's safe to include files that output content
-require_once 'views/layout/header.php';
-require_once 'views/layout/alert.php';
-
-// Connect to database
 global $pdo;
 
-// Get all orders with user information
 try {
     $stmt = $pdo->prepare("
         SELECT o.id, o.created_at, u.username, 

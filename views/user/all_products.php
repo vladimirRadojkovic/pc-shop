@@ -31,7 +31,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
                     <div class="card h-100 shadow-sm">
                         <div class="card-img-top text-center pt-3">
                             <?php if (!empty($product['image_path'])): ?>
-                                <img src="<?= htmlspecialchars($product['image_path']) ?>" class="img-fluid" style="height: 150px; object-fit: contain;" alt="<?= htmlspecialchars($product['name']) ?>">
+                                <img src="<?= htmlspecialchars('/assets/img/' . $product['image_path']) ?>" class="img-fluid" style="height: 150px; object-fit: contain;" alt="<?= htmlspecialchars($product['name']) ?>">
                             <?php else: ?>
                                 <img src="assets/img/no-image.png" class="img-fluid" style="height: 150px; object-fit: contain;" alt="Bez slike">
                             <?php endif; ?>

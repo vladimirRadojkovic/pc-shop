@@ -21,7 +21,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
     <div class="row">
         <div class="col-md-5">
             <?php if (!empty($product['image_path'])): ?>
-                <img src="<?= htmlspecialchars($product['image_path']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($product['name']) ?>">
+                <img src="<?= htmlspecialchars('/assets/img/' . $product['image_path']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($product['name']) ?>">
             <?php else: ?>
                 <img src="assets/img/no-image.png" class="img-fluid rounded" alt="Bez slike">
             <?php endif; ?>

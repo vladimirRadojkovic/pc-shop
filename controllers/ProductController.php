@@ -3,16 +3,10 @@ require_once 'config/config.php';
 
 class ProductController {
     
-    /**
-     * Prikazuje formu za dodavanje proizvoda
-     */
     public function showAddForm() {
         require 'views/admin/add_product.php';
     }
 
-    /**
-     * Obrađuje dodavanje novog proizvoda
-     */
     public function processAddForm() {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             global $pdo;
@@ -21,7 +15,17 @@ class ProductController {
             $description = $_POST['description'] ?? '';
             $price = $_POST['price'] ?? 0;
             $category = $_POST['category'] ?? '';
-            $image_path = '';
+            $image_path = $_FILES['image']['name'] ?? '';
+
+            $tempPath = $_FILES['image']['tmp_name'];
+            $destinationPath = __DIR__ . '/../assets/img/' . $image_path;
+
+            if (!move_uploaded_file($tempPath, $destinationPath)) {
+                $_SESSION['alert'] = [
+                    'type' => 'danger',
+                    'message' => "Greška prilikom premeštanja slike."
+                ];
+            }
             
             if (empty($name) || empty($price)) {
                 $_SESSION['alert'] = [
@@ -72,25 +76,19 @@ class ProductController {
             exit;
         }
     }
-    
-    /**
-     * Lists all products for users
-     */
+
     public function listProducts() {
         global $pdo;
         
-        // Check user authorization
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
             redirect('login');
         }
         
-        // Fetch products from database
         try {
             $stmt = $pdo->prepare("SELECT * FROM products ORDER BY created_at DESC");
             $stmt->execute();
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Include the view template with the data
             require 'views/user/all_products.php';
         } catch (PDOException $e) {
             $_SESSION['alert'] = [
@@ -101,11 +99,6 @@ class ProductController {
         }
     }
     
-    /**
-     * Shows details of a specific product
-     * 
-     * @param int $id Product ID
-     */
     public function showProductDetails($id) {
         global $pdo;
         
@@ -118,7 +111,6 @@ class ProductController {
         }
         
         try {
-            // Fetch product details
             $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -141,13 +133,9 @@ class ProductController {
         }
     }
     
-    /**
-     * Prikazuje listu proizvoda za administraciju
-     */
     public function listProductsAdmin() {
         global $pdo;
         
-        // Provera ovlašćenja
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             redirect('login');
         }
@@ -166,16 +154,10 @@ class ProductController {
             redirect('admin');
         }
     }
-    
-    /**
-     * Prikazuje formu za izmenu proizvoda
-     * 
-     * @param int $id ID proizvoda
-     */
+
     public function showEditForm($id) {
         global $pdo;
         
-        // Provera ovlašćenja
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             redirect('login');
         }
@@ -189,7 +171,6 @@ class ProductController {
         }
         
         try {
-            // Dohvatanje proizvoda
             $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -202,7 +183,6 @@ class ProductController {
                 redirect('list_products');
             }
             
-            // Prikazivanje forme za izmenu
             require 'views/admin/edit_product.php';
         } catch (PDOException $e) {
             $_SESSION['alert'] = [
@@ -213,13 +193,9 @@ class ProductController {
         }
     }
     
-    /**
-     * Ažurira podatke o proizvodu
-     */
     public function updateProduct() {
         global $pdo;
         
-        // Provera ovlašćenja
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             redirect('login');
         }
@@ -244,24 +220,18 @@ class ProductController {
         }
         
         try {
-            // Dohvatanje trenutne slike proizvoda
             $stmt = $pdo->prepare("SELECT image_path FROM products WHERE id = ?");
             $stmt->execute([$id]);
             $currentProduct = $stmt->fetch(PDO::FETCH_ASSOC);
             
             $image_path = $currentProduct['image_path'] ?? '';
             
-            // Obrada slike ako je uploadovana nova
             if (!empty($_FILES['image']['name'])) {
-                // Ovde bi trebalo dodati kod za upload i obradu slike
-                // Za sada ostavljamo prazno
-                $image_path = ''; // Nova putanja slike
+                $image_path = ''; 
             } else if ($delete_image) {
-                // Ako je označeno da se briše slika
                 $image_path = '';
             }
             
-            // Ažuriranje proizvoda
             $stmt = $pdo->prepare("UPDATE products SET name = ?, description = ?, price = ?, category = ?, image_path = ? WHERE id = ?");
             $result = $stmt->execute([$name, $description, $price, $category, $image_path, $id]);
             
@@ -286,16 +256,10 @@ class ProductController {
             redirect('edit_product&id=' . $id);
         }
     }
-    
-    /**
-     * Briše proizvod
-     * 
-     * @param int $id ID proizvoda
-     */
+
     public function deleteProduct($id) {
         global $pdo;
         
-        // Provera ovlašćenja
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             redirect('login');
         }

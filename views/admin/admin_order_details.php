@@ -1,23 +1,13 @@
 <?php
-// Start session if needed
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+require_once 'views/layout/header.php';
+require_once 'views/layout/alert.php';
 
-// Check authorization before including any view files
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
-
-// Now it's safe to include files that output content
-require_once 'views/layout/header.php';
-require_once 'views/layout/alert.php';
-
-// Connect to database
 global $pdo;
 
-// Get order ID from URL
 $orderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$orderId) {
@@ -30,7 +20,6 @@ if (!$orderId) {
 }
 
 try {
-    // Get order information with username
     $stmt = $pdo->prepare("
         SELECT o.*, u.username 
         FROM orders o
@@ -49,7 +38,6 @@ try {
         exit;
     }
     
-    // Get order items with product details
     $stmt = $pdo->prepare("
         SELECT oi.quantity, p.id as product_id, p.name, p.price, 
                (oi.quantity * p.price) as subtotal
@@ -60,7 +48,6 @@ try {
     $stmt->execute([$orderId]);
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Calculate total
     $total = 0;
     foreach ($items as $item) {
         $total += $item['subtotal'];
