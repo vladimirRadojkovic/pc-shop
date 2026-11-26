@@ -34,7 +34,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 
         <div class="mb-3">
             <label for="price" class="form-label">Cena (RSD)</label>
-            <input type="number" step="0.01" class="form-control" name="price" required>
+            <input type="number" step="0.01" min="0.01" class="form-control" name="price" required>
         </div>
 
         <div class="mb-3">

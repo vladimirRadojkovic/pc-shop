@@ -21,6 +21,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?page=admin">Admin panel</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php?page=admin_reports">
+                                <i class="bi bi-bar-chart-line"></i> Izveštaji
+                            </a>
+                        </li>
                     <?php else: ?>
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?page=all_products">Proizvodi</a>

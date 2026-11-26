@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
@@ -57,6 +58,24 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 try {
     $pdo->exec($sql);
+
+    // Migracija za postojeće baze: dodaj kolonu price u order_items ako ne postoji
+    $colCheck = $pdo->query("
+        SELECT COUNT(*)
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'order_items'
+          AND COLUMN_NAME = 'price'
+    ");
+    if ((int)$colCheck->fetchColumn() === 0) {
+        $pdo->exec("ALTER TABLE order_items ADD COLUMN price DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER quantity");
+        $pdo->exec("
+            UPDATE order_items oi
+            JOIN products p ON oi.product_id = p.id
+            SET oi.price = p.price
+            WHERE oi.price = 0
+        ");
+    }
     
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = 'admin'");
     $stmt->execute();
