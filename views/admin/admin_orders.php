@@ -13,12 +13,11 @@ try {
     $stmt = $pdo->prepare("
         SELECT o.id, o.created_at, u.username, 
                COUNT(oi.id) as item_count,
-               SUM(oi.quantity * p.price) as total_amount
+               SUM(oi.quantity * oi.price) as total_amount
         FROM orders o
         JOIN users u ON o.user_id = u.id
         JOIN order_items oi ON o.id = oi.order_id
-        JOIN products p ON oi.product_id = p.id
-        GROUP BY o.id
+        GROUP BY o.id, o.created_at, u.username
         ORDER BY o.created_at DESC
     ");
     $stmt->execute();

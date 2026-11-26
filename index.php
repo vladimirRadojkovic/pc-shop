@@ -24,6 +24,11 @@ switch ($page) {
     case 'admin_order_details':
         include 'views/admin/admin_order_details.php';
         break;
+    case 'admin_reports':
+        require_once 'controllers/ReportController.php';
+        $controller = new ReportController();
+        $controller->showReports();
+        break;
     case 'all_products':
         require_once 'controllers/ProductController.php';
         $controller = new ProductController();

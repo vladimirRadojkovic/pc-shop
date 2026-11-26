@@ -15,16 +15,23 @@ class ProductController {
             $description = $_POST['description'] ?? '';
             $price = $_POST['price'] ?? 0;
             $category = $_POST['category'] ?? '';
-            $image_path = $_FILES['image']['name'] ?? '';
+            $image_path = '';
+            if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $image_path = basename($_FILES['image']['name']);
+                $tempPath = $_FILES['image']['tmp_name'];
+                $imgDir = __DIR__ . '/../assets/img';
+                if (!is_dir($imgDir)) {
+                    mkdir($imgDir, 0777, true);
+                }
+                $destinationPath = $imgDir . '/' . $image_path;
 
-            $tempPath = $_FILES['image']['tmp_name'];
-            $destinationPath = __DIR__ . '/../assets/img/' . $image_path;
-
-            if (!move_uploaded_file($tempPath, $destinationPath)) {
-                $_SESSION['alert'] = [
-                    'type' => 'danger',
-                    'message' => "Greška prilikom premeštanja slike."
-                ];
+                if (!move_uploaded_file($tempPath, $destinationPath)) {
+                    $image_path = '';
+                    $_SESSION['alert'] = [
+                        'type' => 'danger',
+                        'message' => "Greška prilikom premeštanja slike."
+                    ];
+                }
             }
             
             if (empty($name) || empty($price)) {

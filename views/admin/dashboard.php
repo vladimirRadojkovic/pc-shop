@@ -26,6 +26,10 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
                     <span>Pregled porudžbina</span>
                     <i class="bi bi-box"></i>
                 </a>
+                <a href="index.php?page=admin_reports" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-light shadow-sm">
+                    <span>Izveštaji i analitika</span>
+                    <i class="bi bi-bar-chart-line"></i>
+                </a>
             </div>
         </div>
     </div>

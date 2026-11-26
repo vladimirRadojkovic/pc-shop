@@ -39,8 +39,8 @@ try {
     }
     
     $stmt = $pdo->prepare("
-        SELECT oi.quantity, p.id as product_id, p.name, p.price, 
-               (oi.quantity * p.price) as subtotal
+        SELECT oi.quantity, p.id as product_id, p.name, oi.price, 
+               (oi.quantity * oi.price) as subtotal
         FROM order_items oi
         JOIN products p ON oi.product_id = p.id
         WHERE oi.order_id = ?

@@ -168,10 +168,14 @@ class CartController {
             $stmt->execute([$_SESSION['user']['id']]);
             $orderId = $pdo->lastInsertId();
             
-            $insertItem = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)");
+            $priceStmt = $pdo->prepare("SELECT price FROM products WHERE id = ?");
+            $insertItem = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
             
             foreach ($_SESSION['cart'] as $item) {
-                $insertItem->execute([$orderId, $item['id'], $item['quantity']]);
+                $priceStmt->execute([$item['id']]);
+                $dbPrice = $priceStmt->fetchColumn();
+                $unitPrice = ($dbPrice !== false) ? $dbPrice : $item['price'];
+                $insertItem->execute([$orderId, $item['id'], $item['quantity'], $unitPrice]);
             }
             
             $pdo->commit();
@@ -207,13 +211,12 @@ class CartController {
         try {
             $stmt = $pdo->prepare("
                 SELECT o.id, o.created_at, 
-                       SUM(oi.quantity * p.price) as total_amount,
+                       SUM(oi.quantity * oi.price) as total_amount,
                        COUNT(oi.id) as total_items
                 FROM orders o
                 JOIN order_items oi ON o.id = oi.order_id
-                JOIN products p ON oi.product_id = p.id
                 WHERE o.user_id = ?
-                GROUP BY o.id
+                GROUP BY o.id, o.created_at
                 ORDER BY o.created_at DESC
             ");
             $stmt->execute([$_SESSION['user']['id']]);
@@ -256,7 +259,7 @@ class CartController {
             }
             
             $stmt = $pdo->prepare("
-                SELECT oi.quantity, p.name, p.price, (oi.quantity * p.price) as subtotal
+                SELECT oi.quantity, p.name, oi.price, (oi.quantity * oi.price) as subtotal
                 FROM order_items oi
                 JOIN products p ON oi.product_id = p.id
                 WHERE oi.order_id = ?
